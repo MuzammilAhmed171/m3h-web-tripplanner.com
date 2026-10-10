@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripPlanner - Plan Your Perfect Trip</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0077B6;
+            --accent: #90E0EF;
+            --text: #1E1E1E;
+            --background: #F8F9FA;
+            --danger: #FF4D4D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background-color: var(--background);
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), url('https://images.unsplash.com/photo-1499678329028-101435549a4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #023E8A;
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent);
+        }
+        
+        /* Add Destination */
+        .add-destination-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group {
+            flex: 1;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .input-group input.error {
+            border-color: var(--danger);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+        
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .destination-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .destination-card h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Calendar Section */
+        .calendar-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .calendar-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .calendar-card h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .date-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .date-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .save-dates-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .save-dates-btn:hover {
+            background-color: #023E8A;
+        }
+        
+        /* Trip Summary */
+        .trip-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .trip-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .trip-card h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .edit-btn, .delete-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .edit-btn {
+            background-color: var(--accent);
+            color: var(--text);
+        }
+        
+        .delete-btn {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .cancel-btn {
+            background: #ddd;
+            color: var(--text);
+        }
+        
+        /* Packing Checklist */
+        .packing-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .packing-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .add-item-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .packing-list {
+            list-style: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .packing-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .packing-item:last-child {
+            border-bottom: none;
+        }
+        
+        .packing-item input[type="checkbox"] {
+            margin-right: 1rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .packing-item label {
+            flex: 1;
+            cursor: pointer;
+        }
+        
+        .packing-item.checked label {
+            text-decoration: line-through;
+            color: #777;
+        }
+        
+        .delete-item {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-5px);
+        }
+        
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 99;
+        }
+        
+        .scroll-top.visible {
+            opacity: 1;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 1rem 0;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            
+            nav ul.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .destinations-grid,
+            .calendar-grid,
+            .trip-summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <span>🌍</span>
+            <span>TripPlanner</span>
+        </div>
+        <nav>
+            <ul id="nav-menu">
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#calendar">Calendar</a></li>
+                <li><a href="#summary">Summary</a></li>
+                <li><a href="#packing">Packing</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <h1>Plan Your Perfect Trip!</h1>
+        <p>Manage destinations, dates, essentials, all in one place.</p>
+        <button class="cta-button" id="start-planning">Start Planning</button>
+    </section>
+
+    <!-- Add Destination Section -->
+    <section id="destinations">
+        <h2 class="section-title">Add Destinations</h2>
+        <div class="add-destination-form">
+            <div class="form-row">
+                <div class="input-group">
+                    <label for="destination-name">Destination Name</label>
+                    <input type="text" id="destination-name" placeholder="Enter destination name">
+                    <div class="error-message" id="name-error">Please enter a destination name</div>
+                </div>
+                <div class="input-group">
+                    <label for="destination-country">Country</label>
+                    <select id="destination-country">
+                        <option value="">Select a country</option>
+                        <option value="france">France</option>
+                        <option value="italy">Italy</option>
+                        <option value="spain">Spain</option>
+                        <option value="germany">Germany</option>
+                        <option value="japan">Japan</option>
+                        <option value="usa">United States</option>
+                        <option value="uk">United Kingdom</option>
+                    </select>
+                    <div class="error-message" id="country-error">Please select a country</div>
+                </div>
+            </div>
+            <button class="cta-button" id="add-destination">Add Destination</button>
+        </div>
+        <div class="destinations-grid" id="destinations-container">
+            <!-- Destination cards will be added here dynamically -->
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendar">
+        <h2 class="section-title">Select Travel Dates</h2>
+        <div class="calendar-container">
+            <div class="calendar-grid" id="calendar-container">
+                <!-- Calendar cards will be added here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Trip Summary Section -->
+    <section id="summary">
+        <h2 class="section-title">Trip Summary</h2>
+        <div class="trip-summary-grid" id="trip-summary-container">
+            <!-- Trip summary cards will be added here dynamically -->
+        </div>
+    </section>
+
+    <!-- Packing Checklist Section -->
+    <section id="packing">
+        <h2 class="section-title">Packing Checklist</h2>
+        <div class="packing-form">
+            <input type="text" id="packing-item" placeholder="Add an item to pack">
+            <button class="add-item-btn" id="add-packing-item">+</button>
+        </div>
+        <ul class="packing-list" id="packing-list">
+            <!-- Packing list items will be added here dynamically -->
+        </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p>© 2025 TripPlanner. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-top" id="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Edit Date Modal -->
+    <div class="modal-overlay" id="date-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Dates</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="date-picker">
+                <div class="date-group">
+                    <label for="edit-start-date">Start Date</label>
+                    <input type="date" id="edit-start-date">
+                </div>
+                <div class="date-group">
+                    <label for="edit-end-date">End Date</label>
+                    <input type="date" id="edit-end-date">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="cta-button cancel-btn" id="cancel-edit">Cancel</button>
+                <button class="cta-button" id="save-edit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        const startPlanningBtn = document.getElementById('start-planning');
+        const addDestinationBtn = document.getElementById('add-destination');
+        const destinationName = document.getElementById('destination-name');
+        const destinationCountry = document.getElementById('destination-country');
+        const destinationsContainer = document.getElementById('destinations-container');
+        const calendarContainer = document.getElementById('calendar-container');
+        const tripSummaryContainer = document.getElementById('trip-summary-container');
+        const packingList = document.getElementById('packing-list');
+        const addPackingItemBtn = document.getElementById('add-packing-item');
+        const packingItemInput = document.getElementById('packing-item');
+        const scrollTopBtn = document.getElementById('scroll-top');
+        const dateModal = document.getElementById('date-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const saveEditBtn = document.getElementById('save-edit');
+        const editStartDate = document.getElementById('edit-start-date');
+        const editEndDate = document.getElementById('edit-end-date');
+
+        // Data
+        let destinations = [];
+        let tripDestinations = [];
+        let packingItems = JSON.parse(localStorage.getItem('packingItems')) || [];
+        let currentEditId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPackingList();
+            
+            // Set min date for date pickers to today
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                input.min = today;
+            });
+        });
+
+        // Event Listeners
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        startPlanningBtn.addEventListener('click', () => {
+            document.getElementById('destinations').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Navigation smooth scrolling
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Add destination
+        addDestinationBtn.addEventListener('click', addDestination);
+
+        // Add packing item
+        addPackingItemBtn.addEventListener('click', addPackingItem);
+        packingItemInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addPackingItem();
+        });
+
+        // Scroll to top
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Modal handlers
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelEditBtn.addEventListener('click', closeModal);
+        saveEditBtn.addEventListener('click', saveDateEdit);
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // Functions
+        function addDestination() {
+            // Reset errors
+            document.getElementById('name-error').style.display = 'none';
+            document.getElementById('country-error').style.display = 'none';
+            destinationName.classList.remove('error');
+            destinationCountry.classList.remove('error');
+            
+            // Validate inputs
+            if (!destinationName.value.trim()) {
+                destinationName.classList.add('error');
+                document.getElementById('name-error').style.display = 'block';
+                return;
+            }
+            
+            if (!destinationCountry.value) {
+                destinationCountry.classList.add('error');
+                document.getElementById('country-error').style.display = 'block';
+                return;
+            }
+            
+            // Create destination object
+            const destination = {
+                id: Date.now(),
+                name: destinationName.value.trim(),
+                country: destinationCountry.value,
+                startDate: '',
+                endDate: ''
+            };
+            
+            destinations.push(destination);
+            renderDestinationCards();
+            renderCalendarCards();
+            
+            // Reset form
+            destinationName.value = '';
+            destinationCountry.value = '';
+        }
+
+        function removeDestination(id) {
+            // Remove from destinations
+            destinations = destinations.filter(dest => dest.id !== id);
+            
+            // Remove from trip summary if present
+            tripDestinations = tripDestinations.filter(dest => dest.id !== id);
+            
+            renderDestinationCards();
+            renderCalendarCards();
+            renderTripSummary();
+        }
+
+        function saveDates(id) {
+            const destination = destinations.find(dest => dest.id === id);
+            if (!destination) return;
+            
+            const card = document.querySelector(`.calendar-card[data-id="${id}"]`);
+            const startDate = card.querySelector('.start-date').value;
+            const endDate = card.querySelector('.end-date').value;
+            
+            // Validate dates
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            if (new Date(endDate) < new Date(startDate)) {
+                alert('End date cannot be before start date');
+                return;
+            }
+            
+            // Update destination
+            destination.startDate = startDate;
+            destination.endDate = endDate;
+            
+            // Move to trip summary
+            tripDestinations.push(destination);
+            destinations = destinations.filter(dest => dest.id !== id);
+            
+            renderDestinationCards();
+            renderCalendarCards();
+            renderTripSummary();
+            
+            // Show confirmation
+            showConfirmation('Dates saved successfully!');
+        }
+
+        function openEditModal(id) {
+            const destination = tripDestinations.find(dest => dest.id === id);
+            if (!destination) return;
+            
+            currentEditId = id;
+            editStartDate.value = destination.startDate;
+            editEndDate.value = destination.endDate;
+            dateModal.style.display = 'flex';
+        }
+
+        function saveDateEdit() {
+            if (!currentEditId) return;
+            
+            const destination = tripDestinations.find(dest => dest.id === currentEditId);
+            if (!destination) return;
+            
+            // Validate dates
+            if (!editStartDate.value || !editEndDate.value) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            if (new Date(editEndDate.value) < new Date(editStartDate.value)) {
+                alert('End date cannot be before start date');
+                return;
+            }
+            
+            // Update destination
+            destination.startDate = editStartDate.value;
+            destination.endDate = editEndDate.value;
+            
+            renderTripSummary();
+            closeModal();
+            showConfirmation('Dates updated successfully!');
+        }
+
+        function closeModal() {
+            dateModal.style.display = 'none';
+            currentEditId = null;
+        }
+
+        function addPackingItem() {
+            const itemText = packingItemInput.value.trim();
+            if (!itemText) return;
+            
+            const newItem = {
+                id: Date.now(),
+                text: itemText,
+                packed: false
+            };
+            
+            packingItems.push(newItem);
+            renderPackingList();
+            savePackingToLocalStorage();
+            
+            // Reset input
+            packingItemInput.value = '';
+            packingItemInput.focus();
+        }
+
+        function togglePacked(id) {
+            const item = packingItems.find(item => item.id === id);
+            if (item) {
+                item.packed = !item.packed;
+                renderPackingList();
+                savePackingToLocalStorage();
+            }
+        }
+
+        function deletePackingItem(id) {
+            packingItems = packingItems.filter(item => item.id !== id);
+            renderPackingList();
+            savePackingToLocalStorage();
+        }
+
+        function savePackingToLocalStorage() {
+            localStorage.setItem('packingItems', JSON.stringify(packingItems));
+        }
+
+        function showConfirmation(message) {
+            const confirmation = document.createElement('div');
+            confirmation.textContent = message;
+            confirmation.style.position = 'fixed';
+            confirmation.style.bottom = '20px';
+            confirmation.style.left = '50%';
+            confirmation.style.transform = 'translateX(-50%)';
+            confirmation.style.backgroundColor = 'var(--primary)';
+            confirmation.style.color = 'white';
+            confirmation.style.padding = '10px 20px';
+            confirmation.style.borderRadius = '5px';
+            confirmation.style.zIndex = '1000';
+            confirmation.style.opacity = '0';
+            confirmation.style.transition = 'opacity 0.3s';
+            
+            document.body.appendChild(confirmation);
+            
+            // Fade in
+            setTimeout(() => {
+                confirmation.style.opacity = '1';
+            }, 10);
+            
+            // Fade out and remove
+            setTimeout(() => {
+                confirmation.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(confirmation);
+                }, 300);
+            }, 3000);
+        }
+
+        // Rendering functions
+        function renderDestinationCards() {
+            destinationsContainer.innerHTML = '';
+            
+            if (destinations.length === 0) {
+                destinationsContainer.innerHTML = '<p>No destinations added yet. Add your first destination above!</p>';
+                return;
+            }
+            
+            destinations.forEach(destination => {
+                const card = document.createElement('div');
+                card.className = 'destination-card';
+                card.innerHTML = `
+                    <h3>${getCountryFlag(destination.country)} ${destination.name}</h3>
+                    <p>Country: ${getCountryName(destination.country)}</p>
+                    <button class="remove-btn" onclick="removeDestination(${destination.id})">&times;</button>
+                `;
+                destinationsContainer.appendChild(card);
+            });
+        }
+
+        function renderCalendarCards() {
+            calendarContainer.innerHTML = '';
+            
+            if (destinations.length === 0) {
+                calendarContainer.innerHTML = '<p>Add destinations to see them here and set travel dates.</p>';
+                return;
+            }
+            
+            destinations.forEach(destination => {
+                const card = document.createElement('div');
+                card.className = 'calendar-card';
+                card.setAttribute('data-id', destination.id);
+                card.innerHTML = `
+                    <h3>${getCountryFlag(destination.country)} ${destination.name}</h3>
+                    <div class="date-picker">
+                        <div class="date-group">
+                            <label>Start Date</label>
+                            <input type="date" class="start-date">
+                        </div>
+                        <div class="date-group">
+                            <label>End Date</label>
+                            <input type="date" class="end-date">
+                        </div>
+                        <button class="save-dates-btn" onclick="saveDates(${destination.id})">Save Dates</button>
+                    </div>
+                `;
+                calendarContainer.appendChild(card);
+            });
+        }
+
+        function renderTripSummary() {
+            tripSummaryContainer.innerHTML = '';
+            
+            if (tripDestinations.length === 0) {
+                tripSummaryContainer.innerHTML = '<p>No trips planned yet. Add destinations and set dates to see them here.</p>';
+                return;
+            }
+            
+            tripDestinations.forEach(destination => {
+                const card = document.createElement('div');
+                card.className = 'trip-card';
+                card.innerHTML = `
+                    <h3>${getCountryFlag(destination.country)} ${destination.name}</h3>
+                    <p>Start: ${formatDate(destination.startDate)}</p>
+                    <p>End: ${formatDate(destination.endDate)}</p>
+                    <p>Duration: ${calculateDuration(destination.startDate, destination.endDate)} days</p>
+                    <div class="card-actions">
+                        <button class="edit-btn" onclick="openEditModal(${destination.id})">Edit</button>
+                        <button class="delete-btn" onclick="removeTripDestination(${destination.id})">Delete</button>
+                    </div>
+                `;
+                tripSummaryContainer.appendChild(card);
+            });
+        }
+
+        function removeTripDestination(id) {
+            if (confirm('Are you sure you want to remove this destination from your trip?')) {
+                tripDestinations = tripDestinations.filter(dest => dest.id !== id);
+                renderTripSummary();
+            }
+        }
+
+        function renderPackingList() {
+            packingList.innerHTML = '';
+            
+            if (packingItems.length === 0) {
+                packingList.innerHTML = '<p>Your packing list is empty. Add items above!</p>';
+                return;
+            }
+            
+            packingItems.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.className = 'packing-item' + (item.packed ? ' checked' : '');
+                listItem.innerHTML = `
+                    <div>
+                        <input type="checkbox" id="item-${item.id}" ${item.packed ? 'checked' : ''} 
+                            onchange="togglePacked(${item.id})">
+                        <label for="item-${item.id}">${item.text}</label>
+                    </div>
+                    <button class="delete-item" onclick="deletePackingItem(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                packingList.appendChild(listItem);
+            });
+        }
+
+        // Helper functions
+        function getCountryFlag(countryCode) {
+            const flags = {
+                france: '🇫🇷',
+                italy: '🇮🇹',
+                spain: '🇪🇸',
+                germany: '🇩🇪',
+                japan: '🇯🇵',
+                usa: '🇺🇸',
+                uk: '🇬🇧'
+            };
+            return flags[countryCode] || '🌍';
+        }
+
+        function getCountryName(countryCode) {
+            const names = {
+                france: 'France',
+                italy: 'Italy',
+                spain: 'Spain',
+                germany: 'Germany',
+                japan: 'Japan',
+                usa: 'United States',
+                uk: 'United Kingdom'
+            };
+            return names[countryCode] || 'Unknown';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function calculateDuration(startDate, endDate) {
+            if (!startDate || !endDate) return 0;
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = Math.abs(end - start);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        }
+
+        // Initial render
+        renderDestinationCards();
+        renderCalendarCards();
+        renderTripSummary();
+    </script>
+</body>
+</html>
